@@ -1,9 +1,21 @@
 // ============================================================
-// DATA ACCESS
+// DATA ACCESS - Firebase Integration
 // ============================================================
 const STORAGE_KEY = 'hayya_permits';
 
-function getVisas() {
+async function getVisas() {
+  if (typeof isFirebaseConnected !== 'undefined' && isFirebaseConnected()) {
+    try {
+      return await getAllPermitsFromFirebase();
+    } catch (error) {
+      console.error('Firebase error, using localStorage:', error);
+      return getVisasFromLocalStorage();
+    }
+  }
+  return getVisasFromLocalStorage();
+}
+
+function getVisasFromLocalStorage() {
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   } catch {
@@ -26,7 +38,7 @@ function showToast(msg, type = 'success') {
 // ============================================================
 // SEARCH PERMIT
 // ============================================================
-function searchPermit() {
+async function searchPermit() {
   const ref = document.getElementById('permitSearch').value.trim().toUpperCase();
   
   if (!ref) {
@@ -34,7 +46,7 @@ function searchPermit() {
     return;
   }
 
-  const visas = getVisas();
+  const visas = await getVisas();
   const permit = visas.find(v => v.referenceNo === ref);
 
   if (!permit) {

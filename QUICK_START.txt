@@ -1,0 +1,66 @@
+====================================================================
+  QUICK START - Setting Up Your Cloud Database
+====================================================================
+
+Your Hayya Entry Permit Portal now has Firebase integration!
+Follow these simple steps to enable cloud sync:
+
+
+STEP 1: Create Firebase Account (5 minutes)
+--------------------------------------------
+1. Go to: https://console.firebase.google.com
+2. Click "Add project"
+3. Name it: hayya-entry-permit
+4. Click "Continue" and "Create project"
+
+
+STEP 2: Enable Database (2 minutes)
+------------------------------------
+1. Click "Realtime Database" in left menu
+2. Click "Create Database"
+3. Choose location closest to you
+4. Select "Start in test mode"
+5. Click "Enable"
+
+
+STEP 3: Get Your Config (3 minutes)
+------------------------------------
+1. Click gear icon ⚙️ next to "Project Overview"
+2. Click "Project settings"
+3. Scroll to "Your apps" section
+4. Click web icon (</>) 
+5. Name: Hayya Entry Permit
+6. Click "Register app"
+7. COPY the firebaseConfig code
+
+
+STEP 4: Update firebase-config.js (2 minutes)
+----------------------------------------------
+1. Open: firebase-config.js
+2. Replace lines 5-11 with YOUR config from Step 3
+3. Save the file
+
+
+STEP 5: Deploy! (1 minute)
+---------------------------
+Run in Command Prompt:
+
+cd D:\telegram\visaproject
+git add .
+git commit -m "Firebase cloud database configured"
+git push
+
+
+DONE! 🎉
+--------
+Wait 2-3 minutes, then test:
+- Create permit on your PC
+- Scan QR with your phone
+- See full permit details!
+
+
+NEED DETAILED HELP?
+-------------------
+See: FIREBASE_SETUP_GUIDE.txt for complete instructions
+
+====================================================================

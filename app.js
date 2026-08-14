@@ -1,27 +1,50 @@
 // ============================================================
-// DATA STORE
+// DATA STORE - Firebase Integration
 // ============================================================
 const STORAGE_KEY = 'hayya_permits';
 let currentVisaRef = null;
 let uploadedPhotoBase64 = null;
+let cachedVisas = []; // Cache for offline support
 
-function getVisas() {
+// Get visas from Firebase (with localStorage fallback)
+async function getVisas() {
+  if (isFirebaseConnected()) {
+    try {
+      const permits = await getAllPermitsFromFirebase();
+      cachedVisas = permits;
+      return permits;
+    } catch (error) {
+      console.error('Firebase error, using cache:', error);
+      return cachedVisas.length > 0 ? cachedVisas : getVisasFromLocalStorage();
+    }
+  }
+  return getVisasFromLocalStorage();
+}
+
+function getVisasFromLocalStorage() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
   catch { return []; }
 }
-function saveVisas(visas) {
+
+// Save visas to Firebase (with localStorage fallback)
+async function saveVisas(visas) {
   try {
-    // Try to save
+    // Save to Firebase if connected
+    if (isFirebaseConnected()) {
+      // Note: Individual permits are saved via saveVisaData
+      cachedVisas = visas;
+    }
+    
+    // Also save to localStorage as backup
     localStorage.setItem(STORAGE_KEY, JSON.stringify(visas));
+    
     updateCounts();
     updateDashboard();
     loadVisas();
   } catch (e) {
-    // If localStorage is full, show error
     if (e.name === 'QuotaExceededError') {
       console.error('LocalStorage quota exceeded!', e);
       showToast('Storage limit reached! Consider clearing old permits or using smaller photos.', 'error');
-      // Try to save without the last item
       visas.pop();
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(visas));
@@ -34,6 +57,22 @@ function saveVisas(visas) {
     }
   }
 }
+
+// Save single visa to Firebase
+async function saveVisaData(visa) {
+  if (isFirebaseConnected()) {
+    const result = await savePermitToFirebase(visa);
+    if (!result.success) {
+      showToast('Error syncing to cloud: ' + result.error, 'error');
+    }
+  }
+  
+  // Also save to localStorage
+  const visas = getVisasFromLocalStorage();
+  visas.push(visa);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(visas));
+}
+
 function generateRef() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   const cc = (document.getElementById('nationality')?.value || 'QA').substring(0, 2).toUpperCase();
@@ -124,8 +163,8 @@ function showPage(page) {
 // ============================================================
 // DASHBOARD
 // ============================================================
-function updateDashboard() {
-  const visas = getVisas();
+async function updateDashboard() {
+  const visas = await getVisas();
   const today = new Date().toDateString();
   document.getElementById('statTotal').textContent = visas.length;
   document.getElementById('statActive').textContent = visas.filter(v => v.status === 'ACTIVE').length;
@@ -152,10 +191,9 @@ function updateDashboard() {
       </div>`).join('');
   }
 }
-function updateCounts() {
-  document.getElementById('visaCount').textContent = getVisas().length;
-  
-  // Check storage usage
+async function updateCounts() {
+  const visas = await getVisas();
+  document.getElementById('visaCount').textContent = visas.length;
   checkStorageUsage();
 }
 
@@ -386,7 +424,7 @@ function resetForm() {
 // ============================================================
 // GENERATE & SAVE PERMIT
 // ============================================================
-function generateAndSaveVisa() {
+async function generateAndSaveVisa() {
   const btn = document.getElementById('saveVisaBtn');
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner spinner"></i> Processing...';
@@ -423,13 +461,18 @@ function generateAndSaveVisa() {
       entryCount: 0
     };
 
-    const visas = getVisas();
-    visas.push(visaData);
-    saveVisas(visas);
+    // Save to Firebase
+    await saveVisaData(visaData);
     currentVisaRef = visaData.referenceNo;
 
     displayPermitDocument(visaData);
     document.getElementById('visaPreviewContainer').classList.remove('hidden');
+    
+    // Update UI
+    await updateCounts();
+    await updateDashboard();
+    await loadVisas();
+    
     showToast(`Permit ${visaData.referenceNo} issued!`, 'success');
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-stamp"></i> Issue Entry Permit';
@@ -599,8 +642,8 @@ function getPermitPrintStyles() {
 // ============================================================
 // ALL PERMITS TABLE
 // ============================================================
-function loadVisas() {
-  const visas = getVisas();
+async function loadVisas() {
+  const visas = await getVisas();
   const tbody = document.getElementById('visaTableBody');
   if (!tbody) return;
   if (visas.length === 0) {
@@ -632,8 +675,9 @@ function loadVisas() {
   }).join('');
 }
 
-function viewVisa(ref) {
-  const visa = getVisas().find(v => v.referenceNo === ref);
+async function viewVisa(ref) {
+  const visas = await getVisas();
+  const visa = visas.find(v => v.referenceNo === ref);
   if (!visa) { showToast('Permit not found', 'error'); return; }
   showPage('create');
   document.getElementById('fullName').value = visa.fullName;
@@ -665,15 +709,41 @@ function viewAndDownloadPDF(ref) {
   setTimeout(() => downloadPDF(), 700);
 }
 
-function deleteVisa(ref) {
+async function deleteVisa(ref) {
   if (!confirm(`Delete permit ${ref}?`)) return;
-  saveVisas(getVisas().filter(v => v.referenceNo !== ref));
+  
+  // Delete from Firebase
+  if (isFirebaseConnected()) {
+    await deletePermitFromFirebase(ref);
+  }
+  
+  // Delete from localStorage
+  const visas = getVisasFromLocalStorage().filter(v => v.referenceNo !== ref);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(visas));
+  
+  await loadVisas();
+  await updateDashboard();
+  await updateCounts();
   showToast(`Permit ${ref} deleted`, 'success');
 }
 
-function clearAllVisas() {
+async function clearAllVisas() {
   if (!confirm('Delete ALL permits? This cannot be undone.')) return;
-  saveVisas([]);
+  
+  // Clear Firebase (delete all permits)
+  if (isFirebaseConnected()) {
+    const visas = await getVisas();
+    for (const visa of visas) {
+      await deletePermitFromFirebase(visa.referenceNo);
+    }
+  }
+  
+  // Clear localStorage
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+  
+  await loadVisas();
+  await updateDashboard();
+  await updateCounts();
   showToast('All permits cleared', 'success');
 }
 

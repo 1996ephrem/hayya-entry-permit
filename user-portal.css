@@ -1,0 +1,252 @@
+/* ===== RESET & BASE ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f0f2f5;
+  color: #1a1a2e;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  background: #8a1f1f;
+  padding: 0 2rem;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+}
+.navbar-brand { display: flex; align-items: center; gap: 12px; }
+.qatar-flag { height: 32px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.3); }
+.brand-text { display: flex; flex-direction: column; }
+.brand-main { font-size: 1.25rem; font-weight: 900; color: white; letter-spacing: 2px; line-height: 1; }
+.brand-sub { font-size: 0.65rem; color: rgba(255,255,255,0.65); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+.navbar-actions { display: flex; align-items: center; }
+.admin-link {
+  color: white;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.15);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.admin-link:hover { background: rgba(255,255,255,0.25); }
+
+/* ===== HERO SECTION ===== */
+.hero {
+  background: linear-gradient(135deg, #8a1f1f 0%, #6e1a1a 100%);
+  padding: 4rem 2rem;
+  text-align: center;
+  color: white;
+}
+.hero-content { max-width: 700px; margin: 0 auto; }
+.hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
+.hero p { font-size: 1.1rem; color: rgba(255,255,255,0.9); margin-bottom: 2.5rem; }
+
+/* ===== SEARCH BOX ===== */
+.search-box {
+  display: flex;
+  gap: 12px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.search-box input {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  backdrop-filter: blur(10px);
+}
+.search-box input::placeholder { color: rgba(255,255,255,0.6); }
+.search-box input:focus {
+  outline: none;
+  border-color: white;
+  background: rgba(255,255,255,0.25);
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+}
+.btn-primary {
+  background: white;
+  color: #8a1f1f;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+.btn-success { background: #0b8a4a; color: white; }
+.btn-success:hover { background: #0a7040; }
+
+/* ===== RESULT SECTION ===== */
+.result-section {
+  flex: 1;
+  padding: 3rem 2rem;
+}
+.container { max-width: 1000px; margin: 0 auto; }
+.hidden { display: none !important; }
+
+/* ===== PERMIT CARD ===== */
+.permit-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.permit-header-bar {
+  background: linear-gradient(135deg, #8a1f1f 0%, #6e1a1a 100%);
+  padding: 1.5rem 2rem;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.permit-status-badge {
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.permit-status-badge.active { background: #0b8a4a; color: white; }
+.permit-status-badge.expired { background: #dc3545; color: white; }
+
+/* Import permit document styles from main app */
+.permit-document {
+  background: #264653;
+  width: 100%;
+  max-width: 950px;
+  font-family: 'Inter', Arial, sans-serif;
+  color: white;
+  padding: 24px;
+  margin: 0 auto;
+}
+
+/* Fix photo display */
+.permit-document img[alt="Applicant"] {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ===== ACTION BUTTONS ===== */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  padding: 2rem;
+  flex-wrap: wrap;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  background: #1a1a2e;
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  margin-top: auto;
+}
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: #1a1a2e;
+  color: white;
+  padding: 0.9rem 1.6rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.22);
+  font-weight: 500;
+  font-size: 0.88rem;
+  transform: translateY(120px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+  z-index: 999;
+  max-width: 380px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { border-left: 4px solid #0b8a4a; }
+.toast.error { border-left: 4px solid #dc3545; }
+
+/* ===== FULLSCREEN MODAL ===== */
+.fullscreen-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.95);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow: auto;
+}
+.fullscreen-modal.active { display: flex; }
+.fullscreen-modal-content {
+  position: relative;
+  max-width: 95%;
+  max-height: 95vh;
+  overflow: auto;
+}
+.fullscreen-close {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255,255,255,0.9);
+  color: #1a1a2e;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: all 0.2s;
+  z-index: 10000;
+}
+.fullscreen-close:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2rem; }
+  .hero p { font-size: 1rem; }
+  .search-box { flex-direction: column; }
+  .search-box .btn { justify-content: center; }
+  .navbar { padding: 0 1rem; }
+  .action-buttons { flex-direction: column; }
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hayya Entry Permit - Check Status</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<link rel="stylesheet" href="user-portal.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-brand">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Flag_of_Qatar.svg/320px-Flag_of_Qatar.svg.png" alt="Qatar" class="qatar-flag" />
+    <div class="brand-text">
+      <span class="brand-main">HAYYA</span>
+      <span class="brand-sub">Entry Permit Portal</span>
+    </div>
+  </div>
+  <div class="navbar-actions">
+    <a href="index.html" class="admin-link"><i class="fas fa-shield-alt"></i> Admin Portal</a>
+  </div>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Check Your Entry Permit Status</h1>
+    <p>Enter your permit reference number to view your Hayya Entry Visa</p>
+    
+    <div class="search-box">
+      <input type="text" id="permitSearch" placeholder="Enter Permit Reference (e.g. NG-ABC123XYZ)" />
+      <button class="btn btn-primary" onclick="searchPermit()">
+        <i class="fas fa-search"></i> Search
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- RESULT SECTION -->
+<section class="result-section hidden" id="resultSection">
+  <div class="container">
+    <div id="permitResult"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <p>&copy; 2025 Hayya Entry Permit Portal - State of Qatar</p>
+    <p style="font-size:0.85rem;margin-top:0.5rem;color:rgba(255,255,255,0.7);">
+      For assistance, contact: support@hayya.qa
+    </p>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<!-- FULLSCREEN MODAL -->
+<div id="fullscreenModal" class="fullscreen-modal" onclick="closeFullscreen(event)">
+  <button class="fullscreen-close" onclick="closeFullscreen(event)">
+    <i class="fas fa-times"></i>
+  </button>
+  <div class="fullscreen-modal-content" onclick="event.stopPropagation()">
+    <div id="fullscreenContent"></div>
+  </div>
+</div>
+
+<script src="user-portal.js"></script>
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hayya Entry Permit - Admin Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-brand">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Flag_of_Qatar.svg/320px-Flag_of_Qatar.svg.png" alt="Qatar" class="qatar-flag" />
+    <div class="brand-text">
+      <span class="brand-main">HAYYA</span>
+      <span class="brand-sub">Entry Permit Portal</span>
+    </div>
+  </div>
+  <div class="navbar-actions">
+    <span class="badge"><i class="fas fa-shield-alt"></i> Admin Portal</span>
+    <div class="user">
+      <span>Admin</span>
+      <div class="avatar">A</div>
+    </div>
+    <button onclick="logout()" style="background:rgba(255,255,255,0.15);border:none;color:white;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:600;font-size:0.85rem;margin-left:1rem;transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
+  </div>
+</nav>
+
+<!-- APP CONTAINER -->
+<div class="app-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="menu-label">Navigation</div>
+    <button class="menu-item active" data-page="dashboard" onclick="showPage('dashboard')">
+      <i class="fas fa-th-large"></i> Dashboard
+    </button>
+    <button class="menu-item" data-page="create" onclick="showPage('create')">
+      <i class="fas fa-plus-circle"></i> Issue Permit
+    </button>
+    <button class="menu-item" data-page="visas" onclick="showPage('visas')">
+      <i class="fas fa-passport"></i> All Permits
+      <span class="count" id="visaCount">0</span>
+    </button>
+    <button class="menu-item" data-page="scan" onclick="showPage('scan')">
+      <i class="fas fa-qrcode"></i> Verify Permit
+    </button>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- DASHBOARD PAGE -->
+    <div id="page-dashboard" class="page-content">
+      <div class="page-header">
+        <h1>Dashboard <small>Overview of issued permits</small></h1>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="showPage('create')"><i class="fas fa-plus"></i> Issue Permit</button>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-passport"></i></div>
+          <div class="stat-info">
+            <div class="label">Total Permits</div>
+            <div class="value" id="statTotal">0</div>
+            <div class="sub">All time</div>
+          </div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+          <div class="stat-info">
+            <div class="label">Active</div>
+            <div class="value" id="statActive">0</div>
+            <div class="sub">Valid permits</div>
+          </div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
+          <div class="stat-info">
+            <div class="label">Expired</div>
+            <div class="value" id="statExpired">0</div>
+            <div class="sub">Needs renewal</div>
+          </div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+          <div class="stat-info">
+            <div class="label">Today's Issued</div>
+            <div class="value" id="statToday">0</div>
+            <div class="sub">Last 24h</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="fas fa-clock"></i> Recent Activity</div>
+        <div id="recentActivity">
+          <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h3>No activity yet</h3>
+            <p>Issue your first entry permit to get started</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CREATE / ISSUE PERMIT PAGE -->
+    <div id="page-create" class="page-content hidden">
+      <div class="page-header">
+        <h1>Issue Entry Permit <small>Fill in applicant details</small></h1>
+        <div class="actions">
+          <button class="btn btn-outline" onclick="resetForm()"><i class="fas fa-undo"></i> Reset</button>
+        </div>
+      </div>
+
+      <div class="two-col-layout">
+        <!-- Form -->
+        <div class="form-panel">
+          <div class="card">
+            <div class="card-title"><i class="fas fa-user"></i> Personal Information</div>
+            <div class="form-grid">
+              <div class="form-group full">
+                <label>Full Name <span class="required">*</span></label>
+                <input type="text" id="fullName" placeholder="e.g. MOHAMMED ALI HASSAN" />
+              </div>
+              <div class="form-group">
+                <label>Nationality <span class="required">*</span></label>
+                <input type="text" id="nationality" placeholder="e.g. Nigerian" value="Nigerian" />
+              </div>
+              <div class="form-group">
+                <label>Gender <span class="required">*</span></label>
+                <select id="gender">
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Date of Birth <span class="required">*</span></label>
+                <input type="date" id="dateOfBirth" />
+              </div>
+              <div class="form-group">
+                <label>Photo URL <span class="required">*</span></label>
+                <input type="text" id="photoUrl" placeholder="https://... or leave blank" />
+              </div>
+              <div class="form-group full">
+                <label>Upload Photo</label>
+                <input type="file" id="photoUpload" accept="image/*" onchange="handlePhotoUpload(event)" style="padding:0.4rem;" />
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><i class="fas fa-id-card"></i> Passport Details</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Passport Number <span class="required">*</span></label>
+                <input type="text" id="passportNumber" placeholder="e.g. B50393269" />
+              </div>
+              <div class="form-group">
+                <label>Passport Type <span class="required">*</span></label>
+                <select id="passportType">
+                  <option value="NORMAL">Normal</option>
+                  <option value="DIPLOMATIC">Diplomatic</option>
+                  <option value="SERVICE">Service</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label>Passport Expiry Date <span class="required">*</span></label>
+                <input type="date" id="passportExpiry" />
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><i class="fas fa-file-alt"></i> Permit Details</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Visa Category <span class="required">*</span></label>
+                <select id="visaCategory">
+                  <option value="Tourist Visa (A1)">Tourist Visa (A1)</option>
+                  <option value="Business Visa (B1)">Business Visa (B1)</option>
+                  <option value="Work Visa (W1)">Work Visa (W1)</option>
+                  <option value="Student Visa (S1)">Student Visa (S1)</option>
+                  <option value="Family Visit (F1)">Family Visit (F1)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Duration (days) <span class="required">*</span></label>
+                <input type="number" id="duration" value="30" min="1" max="365" />
+              </div>
+              <div class="form-group">
+                <label>Issue Date <span class="required">*</span></label>
+                <input type="date" id="issuingDate" />
+              </div>
+              <div class="form-group">
+                <label>Last Entry Date <span class="required">*</span></label>
+                <input type="date" id="lastEntryDate" />
+              </div>
+              <div class="form-group full">
+                <button class="btn btn-primary w-full" onclick="generateAndSaveVisa()"
+                  style="justify-content:center;padding:0.85rem;font-size:1rem;" id="saveVisaBtn">
+                  <i class="fas fa-stamp"></i> Issue Entry Permit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Preview -->
+        <div class="preview-panel">
+          <div class="card">
+            <div class="card-title"><i class="fas fa-eye"></i> Live Preview</div>
+            <div id="permitLivePreview" class="permit-live-preview">
+              <div class="empty-state" style="padding:2rem 0;">
+                <i class="fas fa-id-card" style="font-size:3rem;"></i>
+                <h3>Permit preview</h3>
+                <p>Fill in the form to see a preview</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generated Permit -->
+      <div id="visaPreviewContainer" class="hidden">
+        <div class="card">
+          <div class="card-title">
+            <i class="fas fa-check-circle" style="color:#0b8a4a;"></i> Entry Permit Issued Successfully
+            <span style="margin-left:auto;font-size:0.8rem;font-weight:500;color:#0b8a4a;">Ready to download</span>
+          </div>
+          <div id="permitDocument" class="permit-document-wrapper">
+            <div id="visaPreview" class="permit-document"></div>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:center;margin-top:1.5rem;flex-wrap:wrap;" class="no-print">
+            <button class="btn btn-primary" onclick="openFullscreen()"><i class="fas fa-expand"></i> Fullscreen</button>
+            <button class="btn btn-success" onclick="printVisa()"><i class="fas fa-print"></i> Print / Save as PDF</button>
+            <button class="btn btn-outline" onclick="resetForm()"><i class="fas fa-plus"></i> Issue Another</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALL PERMITS PAGE -->
+    <div id="page-visas" class="page-content hidden">
+      <div class="page-header">
+        <h1>All Permits <small>Manage all issued entry permits</small></h1>
+        <div class="actions">
+          <button class="btn btn-outline btn-sm" onclick="loadVisas()"><i class="fas fa-sync"></i> Refresh</button>
+          <button class="btn btn-danger btn-sm" onclick="clearAllVisas()"><i class="fas fa-trash"></i> Clear All</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Permit No.</th>
+                <th>Photo</th>
+                <th>Full Name</th>
+                <th>Passport</th>
+                <th>Nationality</th>
+                <th>Category</th>
+                <th>Last Entry</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="visaTableBody">
+              <tr>
+                <td colspan="9" class="text-center" style="padding:2rem;color:#9aa0b0;">
+                  <i class="fas fa-inbox" style="font-size:1.5rem;display:block;margin-bottom:0.5rem;"></i>
+                  No permits issued yet
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VERIFY PERMIT PAGE -->
+    <div id="page-scan" class="page-content hidden">
+      <div class="page-header">
+        <h1>Verify Entry Permit <small>Lookup by permit number or scan QR</small></h1>
+      </div>
+      <div class="card">
+        <div class="scan-grid">
+          <div>
+            <div class="scan-input-area">
+              <div style="margin-bottom:1.5rem;">
+                <i class="fas fa-qrcode" style="font-size:4rem;color:var(--primary);opacity:0.7;"></i>
+              </div>
+              <p style="color:#1a1a2e;font-weight:600;font-size:1rem;margin-bottom:0.5rem;">Verify Entry Permit</p>
+              <p style="font-size:0.85rem;color:#9aa0b0;margin-bottom:1.5rem;">Enter the permit reference number to verify</p>
+              <div style="display:flex;gap:8px;max-width:380px;margin:0 auto;">
+                <input type="text" id="scanRefInput" placeholder="e.g. NG-A1B2C3D4E5"
+                  style="flex:1;padding:0.65rem 1rem;border:2px solid #e8eaed;border-radius:10px;font-family:inherit;font-size:0.9rem;" />
+                <button class="btn btn-primary" onclick="lookupVisaByRef()"><i class="fas fa-search"></i></button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="scan-result-area">
+              <div id="scanResult">
+                <div class="empty-state" style="padding:2.5rem 0;">
+                  <i class="fas fa-shield-alt" style="font-size:3rem;color:#d0d5e0;"></i>
+                  <h3>Awaiting verification</h3>
+                  <p>Enter a permit number above</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<!-- FULLSCREEN MODAL -->
+<div id="fullscreenModal" class="fullscreen-modal" onclick="closeFullscreen(event)">
+  <button class="fullscreen-close" onclick="closeFullscreen(event)">
+    <i class="fas fa-times"></i>
+  </button>
+  <div class="fullscreen-modal-content" onclick="event.stopPropagation()">
+    <div id="fullscreenContent"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+// Check if admin is logged in
+if (!sessionStorage.getItem('adminLoggedIn')) {
+  window.location.href = 'login.html';
+}
+
+// Add logout button functionality
+function logout() {
+  sessionStorage.removeItem('adminLoggedIn');
+  window.location.href = 'login.html';
+}
+</script>
+</body>
+</html>

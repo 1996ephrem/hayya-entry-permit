@@ -1,0 +1,76 @@
+====================================================================
+  DEPLOYMENT GUIDE - GitHub Pages
+====================================================================
+
+STEP 1: Install Git (if not installed)
+---------------------------------------
+Download and install Git from: https://git-scm.com/downloads
+
+
+STEP 2: Create GitHub Account (if you don't have one)
+-------------------------------------------------------
+Go to: https://github.com/signup
+
+
+STEP 3: Initialize Git Repository
+----------------------------------
+Open Command Prompt in your project folder (D:\telegram\visaproject) and run:
+
+cd D:\telegram\visaproject
+git init
+git add .
+git commit -m "Initial commit - Hayya Entry Permit Portal"
+
+
+STEP 4: Create New Repository on GitHub
+----------------------------------------
+1. Go to: https://github.com/new
+2. Repository name: hayya-entry-permit (or any name you want)
+3. Description: Qatar Hayya Entry Permit Management Portal
+4. Public or Private: Choose "Public" (so it can be deployed)
+5. Click "Create repository"
+
+
+STEP 5: Push Code to GitHub
+----------------------------
+Copy the commands from GitHub (after creating repository) and run in your terminal:
+
+git remote add origin https://github.com/YOUR-USERNAME/hayya-entry-permit.git
+git branch -M main
+git push -u origin main
+
+
+STEP 6: Enable GitHub Pages
+----------------------------
+1. Go to your repository on GitHub
+2. Click "Settings" tab
+3. Scroll down to "Pages" in left sidebar
+4. Under "Source", select "main" branch
+5. Click "Save"
+
+
+STEP 7: Access Your Website
+----------------------------
+After 1-2 minutes, your site will be live at:
+https://YOUR-USERNAME.github.io/hayya-entry-permit/login.html
+
+Share this link with your friends!
+
+
+====================================================================
+  IMPORTANT NOTES
+====================================================================
+
+⚠️ SHARED DATA WARNING:
+Each user will have their OWN data stored in their browser.
+- Admin creates permits on THEIR computer only
+- Users search permits that THEY created on THEIR computer
+- Data is NOT synced between users
+
+💡 For SHARED data between users, you need:
+- A backend server (Node.js, PHP, etc.)
+- A database (MongoDB, MySQL, Firebase, etc.)
+
+📧 Need help? Create an issue on GitHub!
+
+====================================================================

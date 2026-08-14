@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hayya Entry Permit - Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, #264653 0%, #1a3a4a 50%, #8a1f1f 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: white;
+}
+
+.login-container {
+  max-width: 1100px;
+  width: 100%;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.qatar-flag {
+  height: 50px;
+  border-radius: 4px;
+}
+
+.brand-text h1 {
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: white;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.brand-text p {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.8);
+  margin-top: 0.5rem;
+  letter-spacing: 1px;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.login-card {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  border: 2px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.login-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.4);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.3);
+}
+
+.login-card.admin {
+  border-top: 4px solid #8a1f1f;
+}
+
+.login-card.user {
+  border-top: 4px solid #0b8a4a;
+}
+
+.card-icon {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 2rem;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  border: 3px solid rgba(255,255,255,0.3);
+}
+
+.login-card.admin .card-icon {
+  background: rgba(138,31,31,0.3);
+  border-color: #8a1f1f;
+  color: #ff9999;
+}
+
+.login-card.user .card-icon {
+  background: rgba(11,138,74,0.3);
+  border-color: #0b8a4a;
+  color: #99ffcc;
+}
+
+.card-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.card-description {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.login-btn {
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: inherit;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.login-btn.admin {
+  background: #8a1f1f;
+  color: white;
+}
+
+.login-btn.admin:hover {
+  background: #6e1a1a;
+  transform: scale(1.05);
+}
+
+.login-btn.user {
+  background: #0b8a4a;
+  color: white;
+}
+
+.login-btn.user:hover {
+  background: #0a7040;
+  transform: scale(1.05);
+}
+
+.footer {
+  text-align: center;
+  margin-top: 3rem;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.9rem;
+}
+
+/* Admin Login Form */
+.admin-login-form {
+  display: none;
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  padding: 3rem;
+  max-width: 450px;
+  margin: 0 auto;
+  color: #1a1a2e;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.admin-login-form.active {
+  display: block;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.form-header h2 {
+  font-size: 2rem;
+  color: #8a1f1f;
+  margin-bottom: 0.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #4a4a5a;
+  font-size: 0.9rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+  border: 2px solid #e8eaed;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #8a1f1f;
+  box-shadow: 0 0 0 4px rgba(138,31,31,0.1);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-submit {
+  flex: 1;
+  padding: 1rem;
+  background: #8a1f1f;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.btn-submit:hover {
+  background: #6e1a1a;
+}
+
+.btn-back {
+  padding: 1rem 1.5rem;
+  background: transparent;
+  color: #7a7a8a;
+  border: 2px solid #e8eaed;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.btn-back:hover {
+  background: #f0f2f5;
+}
+
+@media (max-width: 768px) {
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+  .brand-text h1 {
+    font-size: 2rem;
+  }
+  .card-title {
+    font-size: 1.5rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="login-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-section">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Flag_of_Qatar.svg/320px-Flag_of_Qatar.svg.png" alt="Qatar" class="qatar-flag" />
+      <div class="brand-text">
+        <h1>HAYYA</h1>
+      </div>
+    </div>
+    <div class="brand-text">
+      <p>Entry Permit Portal - State of Qatar</p>
+    </div>
+  </div>
+
+  <!-- Choice Cards -->
+  <div id="choiceSection" class="cards-container">
+    <!-- Admin Card -->
+    <div class="login-card admin" onclick="showAdminLogin()">
+      <div class="card-icon">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <h2 class="card-title">Admin Portal</h2>
+      <p class="card-description">
+        Issue, manage, and verify entry permits.<br/>
+        Full administrative access.
+      </p>
+      <button class="login-btn admin">
+        <i class="fas fa-sign-in-alt"></i> Admin Login
+      </button>
+    </div>
+
+    <!-- User Card -->
+    <div class="login-card user" onclick="goToUserPortal()">
+      <div class="card-icon">
+        <i class="fas fa-user"></i>
+      </div>
+      <h2 class="card-title">User Portal</h2>
+      <p class="card-description">
+        Check your permit status and view details.<br/>
+        No login required.
+      </p>
+      <button class="login-btn user">
+        <i class="fas fa-search"></i> Check Permit
+      </button>
+    </div>
+  </div>
+
+  <!-- Admin Login Form -->
+  <div id="adminLoginForm" class="admin-login-form">
+    <div class="form-header">
+      <h2><i class="fas fa-shield-alt"></i> Admin Login</h2>
+      <p style="color:#7a7a8a;font-size:0.9rem;">Enter your credentials to continue</p>
+    </div>
+    <form onsubmit="handleAdminLogin(event)">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="adminUsername" placeholder="Enter username" required />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="adminPassword" placeholder="Enter password" required />
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-back" onclick="showChoices()">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button type="submit" class="btn-submit">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+      </div>
+    </form>
+    <p style="text-align:center;margin-top:1.5rem;color:#7a7a8a;font-size:0.85rem;">
+      Default: admin / admin123
+    </p>
+  </div>
+
+  <div class="footer">
+    <p>&copy; 2025 Hayya Entry Permit Portal - State of Qatar</p>
+  </div>
+</div>
+
+<script>
+// Default admin credentials
+const ADMIN_CREDENTIALS = {
+  username: 'admin',
+  password: 'admin123'
+};
+
+function showAdminLogin() {
+  document.getElementById('choiceSection').style.display = 'none';
+  document.getElementById('adminLoginForm').classList.add('active');
+}
+
+function showChoices() {
+  document.getElementById('choiceSection').style.display = 'grid';
+  document.getElementById('adminLoginForm').classList.remove('active');
+  document.getElementById('adminUsername').value = '';
+  document.getElementById('adminPassword').value = '';
+}
+
+function goToUserPortal() {
+  window.location.href = 'user-portal.html';
+}
+
+function handleAdminLogin(event) {
+  event.preventDefault();
+  
+  const username = document.getElementById('adminUsername').value;
+  const password = document.getElementById('adminPassword').value;
+  
+  if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+    // Store login session
+    sessionStorage.setItem('adminLoggedIn', 'true');
+    // Redirect to admin portal
+    window.location.href = 'index.html';
+  } else {
+    alert('Invalid username or password!');
+    document.getElementById('adminPassword').value = '';
+  }
+}
+</script>
+
+</body>
+</html>

@@ -232,8 +232,13 @@ function renderQR(elementId, text) {
     const el = document.getElementById(elementId);
     if (!el) return;
     el.innerHTML = '';
+    
+    // Get the current domain and create full URL to user portal
+    const baseUrl = window.location.origin + window.location.pathname;
+    const permitUrl = baseUrl + '?ref=' + encodeURIComponent(text || 'HAYYA');
+    
     new QRCode(el, {
-      text: text || 'HAYYA',
+      text: permitUrl,
       width: 140,
       height: 140,
       colorDark: '#1a1a2e',
@@ -292,4 +297,14 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('permitSearch').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') searchPermit();
   });
+  
+  // Check if URL has a permit reference (for QR code scanning)
+  const urlParams = new URLSearchParams(window.location.search);
+  const ref = urlParams.get('ref');
+  
+  if (ref) {
+    // Auto-fill and search if reference is in URL
+    document.getElementById('permitSearch').value = ref;
+    searchPermit();
+  }
 });

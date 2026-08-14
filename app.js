@@ -343,8 +343,13 @@ function renderQR(elementId, text) {
     const el = document.getElementById(elementId);
     if (!el) return;
     el.innerHTML = '';
+    
+    // Get the current domain and create full URL to user portal
+    const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '');
+    const permitUrl = baseUrl + 'user-portal.html?ref=' + encodeURIComponent(text || 'HAYYA');
+    
     new QRCode(el, {
-      text: text || 'HAYYA',
+      text: permitUrl,
       width: 140, height: 140,
       colorDark: '#1a1a2e', colorLight: '#ffffff',
       correctLevel: QRCode.CorrectLevel.H
